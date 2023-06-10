@@ -1,0 +1,538 @@
+{% extends "base.html" %}
+
+{% block title %}Produkty{% endblock %}
+
+{% block content %}
+
+    
+
+<main class=" container">
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-sm-12 col-md-8 ">
+            <!-- NAZWA PRODUKTU -->
+            <div class="container"> 
+                <p class="h3">{{ device.brand }} {{ device.model }}</p>
+            </div>
+            <!-- Przyciski DANE TECH -->
+            <div class="container row mt-3">
+    
+                <div class="col-sm-6 col-md-6">
+                    <img src="/{{ device.image }}" style="width: 18rem;" class="card-img-top " alt="main_foto">
+                </div>
+                <div class="col-sm-6  border-start col-md-6">
+                    {% if specification.CPU %}
+                    <span class="d-flex"><i class="bi bi-cpu  me-3"></i><p>{{ specification.CPU }}</p></span>
+                    {% endif %}
+                    {% if specification.RAM %}
+                    <span class="d-flex"><i class="bi bi-memory me-3"></i><p>{{ specification.RAM }} GB</p></span>
+                    {% endif %}
+                    {% if specification.DISC %}
+                    <span class="d-flex"><i class="bi bi-hdd me-3"></i><p>{{ specification.DISC }} GB</p></span>
+                    {% endif %} 
+                    {% if specification.SIZE %}
+                    <span class="d-flex"><i class="bi bi-arrows-angle-expand me-3"></i><p>{{ specification.SIZE }}"</p></span>
+                    {% endif %}
+                    {% if specification.SCREEN_TYPE %}
+                    <span class="d-flex"><i class="bi bi-award me-3"></i><p>{{ specification.SCREEN_TYPE }}</p></span>
+                    {% endif %}
+                    {% if specification.BATTERY %} 
+                    <span class="d-flex"><i class="bi bi-battery-full me-3"></i><p>{{ specification.BATTERY }} mAh</p></span>
+                    {% endif %} 
+                    {% if device.premier %} 
+                    <span class="d-flex"><i class="bi bi-calendar me-3"></i><p>{{ device.premier|date:'d-m-Y' }} </p></span>
+                    {% endif %} 
+    
+                </div>
+            </div>
+             <!-- Przyciski ULUBIONE TOMEK -->
+            <div class="card-body my-3 pt-3 border-top">
+                <div class=" d-flex">
+                    <!-- LIKE -->
+                    <div class="me-2">
+                    {% if user.is_authenticated %}
+                        {% if like.user_likes_device %}
+                            <form action="{% url 'remove_like' device.id_device %}" data-post-id="{{ post.id }}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-hand-thumbs-up-fill"></i> {{ like.like_count }} UnLike
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'add_like' device.id_device %}" method="post" id="like">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-hand-thumbs-up"></i> {{ like.like_count }} Like
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-primary"  data-bs-toggle="collapse" data-bs-target="#alert" aria-controls="alert" aria-expanded="false" aria-label="alert">
+                            <i class="bi bi-hand-thumbs-up"></i> {{ like.like_count }}
+                        </button>
+                    {% endif %}
+                    </div>
+                    <!-- UNLIKE -->
+                    <div class="me-2">
+                        {% if user.is_authenticated %}
+                            {% if like.user_dislikes_device %}
+                                <form action="{% url 'remove_dislike' device_id=device.id_device %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-hand-thumbs-down-fill"></i> {{ like.dislike_count }} Undislike
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'add_dislike' device_id=device.id_device %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-hand-thumbs-down"></i> {{ like.dislike_count }} Dislike
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% else %}
+                            <button type="submit" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#alert" aria-controls="alert" aria-expanded="false" aria-label="alert">
+                                <i class="bi bi-hand-thumbs-down"></i> {{ like.dislike_count }}
+                            </button>
+                           
+                        {% endif %}
+                    </div>
+                    <!-- OBSERW -->
+                    <div class="me-2">
+                        {% if user.is_authenticated %}
+                            <a href ="{% url 'fav' device.id_device %}" class= "btn btn-outline-primary"><i class="bi bi-heart"></i> Dodaj do ulubionych</a>
+                        {% else %}
+                            <button type="submit" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#alert-ulub" aria-controls="alert-ulub" aria-expanded="false" aria-label="alert-ulub">
+                                <i class="bi bi-heart"></i></i> Dodaj do ulubionych
+                            </button>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+                <div class="collapse alert alert-primary mt-3" role="alert" id="alert">
+                   Aby ocenić produkt musisz być zalogowany
+                </div>
+                <div class="collapse alert alert-primary mt-3" role="alert" id="alert-ulub">
+                    Aby dodać do ulubionych musisz być zalogowany.
+                </div>
+                
+                {% comment %} Widoczne tylko dla admina {% endcomment %}
+                <div class="d-flex mt-3">
+                    {% if user.is_staff %}
+                    {% comment %} Usuwanie urządzenia {% endcomment %}
+                    <div class="me-2">
+                          <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete">
+                            <i class="bi bi-trash"></i> Usuń urządzenie
+                          </button>
+                      
+                          <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="confirmDeleteLabel">Potwierdź usunięcie urządzenia</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-grid gap-2  col-6 mx-auto">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                    <a href="{% url 'remove_device' device.id_device %}" class="btn btn-primary">Usuń</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                    {% endif %}
+
+                    {% comment %} Edytowanie danych urządzenia {% endcomment %}
+                    {% if user.is_staff %}
+                    <div class="me-2">
+                          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#confirmEdit">
+                            <i class="bi bi-pencil-square"></i> Zmień dane
+                          </button>
+                      
+                          <div class="modal fade" id="confirmEdit" tabindex="-1" aria-labelledby="confirmEditLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="confirmEditLabel">Zmień dane urządzenia</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-grid gap-2">
+
+                                    <form class="border-2 rounded-3 p-3" action="{% url 'edit_device_info' device.id_device %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                
+                                        {% comment %} BRAND {% endcomment %}
+                                          <div class="col-sm-12 mx-auto mb-3">
+                                            <input name="{{main_edit_device_form.brand.name}}" class="form-control" type="text" autocomplete="off"
+                                            value="{{main_edit_device_form.brand.value}}"/>
+                                          </div>
+                                          
+                                          {% comment %} MODEL {% endcomment %}
+                                          <div class="col-sm-12 mx-auto mb-3">
+                                            <input name="{{main_edit_device_form.model.name}}" class="form-control" type="text" autocomplete="off"
+                                            value="{{main_edit_device_form.model.value}}"/>
+                                          </div>
+                                
+                                          {% comment %} DEVICE TYPE {% endcomment %}
+                                          <div class="col-sm-12 mx-auto mb-3">
+                                            <label for="category_input" class="mx-1 user-select-none">Rodzaj urządzenia</label>
+                                              <select name="{{ main_edit_device_form.device_type.name }}" class="form-select" id="category_input">
+                                                  {% for value, label in main_edit_device_form.device_type.field.choices %}
+                                                      <option value="{{ value }}" 
+                                                      {% if main_edit_device_form.device_type.value == value %}selected{% endif %}>{{ label }}
+                                                    </option>
+                                                  {% endfor %}
+                                              </select>
+                                          </div>
+                                
+                                          {% comment %} RELEASE DATE {% endcomment %}
+                                          <div class="col-sm-12 mx-auto mb-3">
+                                            <label for="date_input"class="mx-1 user-select-none">Data premiery</label>
+                                            <input name="{{main_edit_device_form.release_date.name}}" class="form-control" 
+                                            value="{{main_edit_device_form.release_date.value}}" type="date" id="date_input"/>
+                                          </div>
+                                             
+                                          {% comment %} CPU {% endcomment %}
+                                            <div class="col-sm-12 mx-auto mb-3 input-group">
+                                              <span class="input-group-text bi bi-cpu"></span>
+                                              <input name="{{specs_edit_device_form.cpu.name}}" class="form-control" 
+                                              value="{{specs_edit_device_form.cpu.value}}" type="text" autocomplete="off"/>
+                                            </div>
+                                  
+                                            {% comment %} RAM {% endcomment %}
+                                            <div class="col-sm-12 mx-auto mb-3 input-group">
+                                              <span class="input-group-text bi bi-memory"></span>
+                                              <input name="{{specs_edit_device_form.ram.name}}" class="form-control" 
+                                              value="{{specs_edit_device_form.ram.value}}" type="text" autocomplete="off"/>
+                                            </div>
+
+                                            {% comment %} DISK_SIZE {% endcomment %}
+                                            <div class="col-sm-12 mx-auto mb-3 input-group">
+                                                <span class="input-group-text bi bi-hdd"></span>
+                                                <input name="{{specs_edit_device_form.disk_size.name}}" class="form-control" 
+                                                value="{{specs_edit_device_form.disk_size.value}}" type="text" autocomplete="off"/>
+                                            </div>
+                          
+                                            {% comment %} SCREEN SIZE {% endcomment %}
+                                            <div class="col-sm-12 mx-auto mb-3 input-group">
+                                              <span class="input-group-text bi bi-arrows-angle-expand"></span>
+                                              <input name="{{specs_edit_device_form.screen_size.name}}" class="form-control" 
+                                              value="{{specs_edit_device_form.screen_size.value}}" type="text" autocomplete="off"/>
+                                            </div>
+                          
+                                            {% comment %} BATTERY {% endcomment %}
+                                            <div class="col-sm-12 mx-auto mb-3 input-group">
+                                              <span class="input-group-text bi bi-battery-full"></span>
+                                              <input name="{{specs_edit_device_form.battery.name}}" class="form-control" 
+                                              value="{{specs_edit_device_form.battery.value}}" type="text" autocomplete="off"/>
+                                            </div>
+                          
+                                            <div class="modal-body d-grid gap-2  col-6 mx-auto">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Zapisz</button>
+                                            </div>
+                                    </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endif %}
+
+                    {% comment %} Zmiana zdjęcia {% endcomment %}
+                    {% if user.is_staff %}
+                    <div class="me-2">
+                          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#changeImage">
+                            <i class="bi bi-image"></i> Zmień zdjęcie
+                          </button>
+                      
+                          <div class="modal fade" id="changeImage" tabindex="-1" aria-labelledby="changeImageLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="changeImageLabel">Zmień zdjęcie</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-grid gap-2">
+
+                                    <form class="border-2 rounded-3 p-3" action="{% url 'edit_device_photo' device.id_device %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                
+                                        <div class="col-sm-12 mx-auto mb-3 input-group">
+                                            <span class="input-group-text bi bi-image"></span>
+                                            <input name="{{edit_image_form.image.name}}" class="form-control" type="file"
+                                            value="{{edit_image_form.image.value}}" autocomplete="off"/>
+                                        </div> 
+                          
+                                        <div class="modal-body d-grid gap-2  col-6 mx-auto">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Zapisz</button>
+                                        </div>
+                                    </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+
+                
+            </div>
+            <!-- Przyciski "Like" i "Dislike" KONRAD 
+            <div class="card-body my-3 pt-3 border-top">
+                
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% if user.is_authenticated %}
+                            {% if user_likes_device %}
+                                <form action="{% url 'remove_like' device.id_device %}" data-post-id="{{ post.id }}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-hand-thumbs-up-fill"></i> Unlike
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'add_like' device.id_device %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="bi bi-hand-thumbs-up"></i> Like
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                        <span class="like-count">{{ like_count }}</span> Likes
+                        {% if user.is_authenticated %}
+                            {% if user_dislikes_device %}
+                                <form action="{% url 'remove_dislike' device_id=device.id_device %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-hand-thumbs-down-fill"></i> Undislike
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'add_dislike' device_id=device.id_device %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-hand-thumbs-down"></i> Dislike
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                        <span class="dislike-count">{{ dislike_count }}</span> Dislikes
+                    </div>
+                    
+                </div>
+            </div>
+            -->
+            <!-- Tabela parametry SEBA -->
+            <div class="card-body my-3 pt-3 ">
+                
+                <div class="card-body border-top">
+                    <table class="table">
+                        <tr>
+                            <th scope="row">Nazwa systemu operacyjnego</th>
+                            <th scope="row">Wersja</th>
+                            <th scope="row">Data wprowadzenia</th>
+                            <th scope="row">Data zakończenia wsparcia</th>
+                        </tr>
+                        
+                        {% for os_info_id, os_info in OS_ALL.items %}
+                            <tr>
+                                <td>{{ os_info.name }}</td>
+                                <td>{{ os_info.version }}</td>
+                                <td>{{ os_info.date_start }}</td>
+                                <td>{{ os_info.date_end }}</td>
+                            </tr>
+                    
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">Brak dostępnych informacji o systemie operacyjnym</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <!-- Wykres info Kiraga -->
+            <div class="card-body my-3 pt-3">
+                <div class="container">
+                    <div class="row justify-content-center ">
+                        
+                            <canvas id="Wsparcie"></canvas>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- System Kom KIRAGA -->
+            <div class="card-body my-3 pt-3">
+                <!-- KOM -->
+                {% for comment in comments %}
+                <div class="border border-2 rounded-3 mb-2 p-2">
+                    <!-- KOM -->
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 ps-3 pt-2">
+                            <p class="fs-5">{{ comment.username }}</p>
+                        </div>
+                        <div class="col-sm-12 col-md-8 ps-3 pt-5">
+                            <p>{{ comment.text }}</p>
+                            <div class="row">
+                                <div class="container d-flex">
+                                    <button class="btn btn-primary mb-2 ms-3" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#komentarz-{{ comment.id_comment }}" aria-controls="komentarz-{{ comment.id_comment }}"
+                                        aria-expanded="false" aria-label="Przełącznik kom">
+                                        Dodaj komentarz
+                                    </button>
+                                    <button class="btn btn-primary mb-2 ms-3" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#podkomentarz-{{ comment.id_comment }}" aria-controls="podkomentarz-{{ comment.id_comment }}"
+                                        aria-expanded="false" aria-label="Przełącznik podkom">
+                                        Rozwiń komentarze
+                                    </button>
+                                </div>
+                            </div>
+            
+                            <div class="collapse justify-content-between" id="komentarz-{{ comment.id_comment }}">
+                                {% if user.is_authenticated %}
+                                
+                                <form action="{% url 'add_UnderComment' device.id_device comment.id_comment %}" class="border border-2 rounded-3 p-3 mb-3" id="under_comment_form" method="POST">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label">Treść komentarza</label>
+                                        <textarea name="{{under_comment_form.comment_text.name}}" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+                                    </div>
+                                </form>
+                                {% else %}
+                                <div class="border border-2 rounded-3 p-3 ">
+                                    <p>Aby dodać komentarz musisz być zalogowany</p>
+                                    <a class="btn btn-primary" href="{% url 'login' %}"> Zaloguj się </a>
+                                    <a class="btn btn-primary" href="{% url 'registration' %}"> Zarejestruj się </a>
+                                </div>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- PODKOM -->
+                    <div class="row">
+                        <div class="col-sm-1 col-md-4">
+                        </div>
+                        <div class="col-sm-11 col-md-8">
+                            {% for under_comment in comment.under_comments %}
+                                <div class="collapse row border-start border-bottom border-4" id="podkomentarz-{{ comment.id_comment }}">
+                                    <div class="col-sm-12 col-md-4 ps-3 pt-2">
+                                        <p class="fs-5">{{ under_comment.user_id__username }}</p>
+                                    </div>
+                                    <div class="col-sm-12 col-md-8 ps-3 pt-5">
+                                        <p>{{ under_comment.text }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            
+                <!-- DODAWANIE KOM -->
+                <form action="{% url 'add_MainComment' device.id_device %}" class="border border-2 rounded-3 p-3 mb-3" id="main-comment-form" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Treść komentarza</label>
+                        <textarea name="{{main_comment_form.comment_text.name}}" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" name="add_comment">Dodaj komentarz</button>
+                    </div>
+                </form>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+                            {{message}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            
+        </div>
+    </div>
+    
+   
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        draw();
+        });
+        var lista = JSON.parse('{{ OS_chart|safe }}');
+        //print("wczytanie");
+
+        function konwersja(data){
+            var transformedList = [];
+            var keys = Object.keys(data);
+            
+            for (var i = 0; i < keys.length; i++) {
+                
+                
+                var start = (parseInt(data[keys[i]].start)-2013);
+                var end = (parseInt(data[keys[i]].koniec)-2013);
+                if(start==end){
+                    start=start*50-10;
+                    end=20;
+                }
+                else{
+                    end=(end-start)*50;
+                    start=start*50;
+                }
+                    
+               // var key = parseInt(keys[i]);
+                
+                transformedList.push([start, end]);
+            }
+            
+            return transformedList;
+        }
+        
+        function draw() {
+            var tablica=konwersja(lista)
+            //var tablica=[[100,300],[150,300],[200,300],[250,300]]
+            console.log(tablica);
+            console.log(tablica.length)
+            const canvas = document.getElementById("Wsparcie");
+            const ctx = canvas.getContext("2d");
+            const height = tablica.length * 50;
+        
+            canvas.width = 600;
+            canvas.height = height;
+        
+            var h = 200 - tablica.length * 20;
+        
+            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillRect(20, 260 - h, 660, 5);
+            ctx.font = "16px Arial";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+            for (var i = 0; i < 6; i++) {
+                ctx.fillStyle = "rgb(200, 200, 200)";
+                ctx.fillRect(49 + i * 100, 20, 3, 240 - h);
+                ctx.fillRect(100 + i * 100, 20, 1, 240 - h);
+                ctx.fillStyle = "rgb(20, 20, 20)";
+                ctx.fillRect(48 + i * 100, 255 - h, 5, 10);
+                ctx.fillText((2014 + i * 2).toString(), 32 + i *100, 285 - h);
+            }
+        
+            for (var i = 0; i < tablica.length; i++) {
+                var wysokosc = 230 - i * 30 - h;
+                ctx.fillStyle = "rgb(24, 24, 24)";                
+                ctx.fillRect(tablica[i][0], wysokosc, tablica[i][1], 20);               
+            }
+        }
+    </script>
+{% endblock %}

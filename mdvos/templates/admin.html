@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Produkty{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <div class="flex-shrink-0 p-3" style="width: 280px;">
+        <a class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+          <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-5 fw-semibold">Panel admina</span>
+        </a>
+        <ul class="list-unstyled ps-0">
+          <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+              Użytkownicy
+            </button>
+            <div class="collapse show" id="home-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Komentarze</a></li>
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">lajki</a></li>
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">konta</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+              urządzenia
+            </button>
+            <div class="collapse" id="dashboard-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">O</a></li>
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">W</a></li>
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">M</a></li>
+                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ay</a></li>
+              </ul>
+            </div>
+          </li>
+          
+          
+        </ul>
+      </div>
+    </div>
+</div>
+  </main>
+{% endblock %}

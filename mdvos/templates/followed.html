@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %} Profil użytkownika{% endblock %}
+
+{% block content %}
+
+<main class="container  ">
+    <div class="row justify-content-center mt-5">      
+        <div class="col-sm-12 col-md-7 ">
+            <h2>Obserwowane urządzenia:</h2> 
+            {% for item in data %}
+                <div class="row position-relative border-top rounded mt-2 p-1">
+                    <div class="col-md-6 mb-md-0 p-md-4">
+                        <img src="/{{ item.device.image }}" class="w-100" alt="zdjęcie_telefonu">
+                    </div>
+                    <div class="col-md-6 p-4 ps-md-0">
+                        <h5 class="mt-0">{{ item.device.brand.decode }} {{ item.device.model }}</h5>
+                        {% if item.specifications.SCREEN_SIZE %}
+                        <span class="d-flex"><i class="bi bi-arrows-angle-expand me-3"></i><p>{{ item.specifications.SCREEN_SIZE }}"</p></span>
+                        {% endif %}
+                        {% if item.specifications.CPU %}
+                        <span class="d-flex"><i class="bi bi-cpu  me-3"></i><p>{{ item.specifications.CPU }}</p></span>
+                        {% endif %}
+                        {% if item.specifications.RAM %}
+                        <span class="d-flex"><i class="bi bi-memory me-3"></i><p>{{ item.specifications.RAM }} GB</p></span>
+                        {% endif %}
+                        {% if item.specifications.DISC %}
+                        <span class="d-flex"><i class="bi bi-hdd me-3"></i><p>{{ item.specifications.DISC }} GB</p></span>
+                        {% endif %}
+                        <a href="{% url 'one_device' id=item.device.id_device %}" class="stretched-link">Czytaj więcej</a>
+                    </div>
+                </div>
+            {% endfor %}
+        
+            {% if page.show_pages_controler %}
+            <div class="row border-top rounded d-flex p-3">
+                <div class="col-4"><p> </p></div>
+                <div class="col-4">
+                    <nav aria-label="Page navigation example " class="mx-auto ">
+                        <ul class="pagination">
+                            {% if show_arrow.0 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=page.previous %}{{ urlEnd }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for item in how_many_pages %}
+                                <li class="page-item"><a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=item %}{{ urlEnd }}">{{ item }}</a></li>
+                            {% endfor %}
+                            {% if show_arrow.1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=page.next %}{{ urlEnd }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-4"><p> </p></div>
+            </div>
+            {% endif %}
+        </div>
+        
+    </div>
+</main>
+
+{% endblock %}
+{% block footer %}{% endblock %}

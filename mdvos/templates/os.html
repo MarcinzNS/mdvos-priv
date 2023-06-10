@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<main class="container  mt-5 ">
+    <div class="row justify-content-center mt-5">
+        
+        <div class="col-sm-12 col-md-3">
+            <div class="container ">
+                <div class="row justify-content-center">
+                    <nav class="navbar navbar-light navbar-expand-xl ">
+                    
+                        <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtr" aria-controls="filtr" aria-expanded="false" aria-label="Przełącznik filtra">
+                            <i class="bi bi-funnel"></i></span>
+                            
+                        </button>
+                        <div class="collapse navbar-collapse mt-2 border border-2 rounded-3 p-3 me-2" id="filtr">
+                            <div class="row">
+                                <!--Filtrowanie-->
+                                <div class="col-12">
+                                    <form action="#">
+                                        <p class="h3 mb-2">Filtry</p>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="Android">
+                                            <label class="form-check-label" for="Android">Android</label>
+                                          </div>
+                                          <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="IOS">
+                                            <label class="form-check-label" for="IOS">IOS</label>
+                                          </div>
+                                          <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="inne">
+                                            <label class="form-check-label" for="inne">innet</label>
+                                          </div>
+                                        <button type="submit" class="btn btn-primary float-end">Filtruj</button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        
+                        
+                    </nav>
+                </div>
+            </div>  
+        </div>
+        <div class="col-sm-12 col-md-7 ">
+            
+            {% for item in data %}
+                <div class="row position-relative border-top rounded mt-2 p-1">
+                    <div class="col-md-6 mb-md-0 p-md-4">
+                        <img src="/{{ item.device.image }}" class="w-100" alt="zdjęcie_telefonu">
+                    </div>
+                    <div class="col-md-6 p-4 ps-md-0">
+                        <h5 class="mt-0">{{ item.device.brand }} {{ item.device.model }}</h5>
+                        {% if item.specifications.SCREEN_SIZE %}
+                        <span class="d-flex"><i class="bi bi-arrows-angle-expand me-3"></i><p>{{ item.specifications.SCREEN_SIZE }}"</p></span>
+                        {% endif %}
+                        {% if item.specifications.CPU %}
+                        <span class="d-flex"><i class="bi bi-cpu  me-3"></i><p>{{ item.specifications.CPU }}</p></span>
+                        {% endif %}
+                        {% if item.specifications.RAM %}
+                        <span class="d-flex"><i class="bi bi-memory me-3"></i><p>{{ item.specifications.RAM }} GB</p></span>
+                        {% endif %}
+                        {% if item.specifications.DISC %}
+                        <span class="d-flex"><i class="bi bi-hdd me-3"></i><p>{{ item.specifications.DISC }} GB</p></span>
+                        {% endif %}
+                        <a href="{% url 'one_device' id=item.device.id_device %}" class="stretched-link">Czytaj więcej</a>
+                    </div>
+                </div>
+            {% endfor %}
+        
+            {% if page.show_pages_controler %}
+            <div class="row border-top rounded d-flex p-3">
+                <div class="col-4"><p> </p></div>
+                <div class="col-4">
+                    <nav aria-label="Page navigation example " class="mx-auto ">
+                        <ul class="pagination">
+                            {% if show_arrow.0 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=page.previous %}{{ urlEnd }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for item in how_many_pages %}
+                                <li class="page-item"><a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=item %}{{ urlEnd }}">{{ item }}</a></li>
+                            {% endfor %}
+                            {% if show_arrow.1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{% url 'devices' how_many_item_on_page=how_many_item_on_page page=page.next %}{{ urlEnd }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-4"><p> </p></div>
+            </div>
+            {% endif %}
+        </div>
+        
+    </div>
+</main>
+{% endblock %}

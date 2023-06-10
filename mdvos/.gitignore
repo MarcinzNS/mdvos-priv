@@ -1,0 +1,5 @@
+__pycache__
+mdvos/__pycache__
+.env
+.DS_Store
+main/migrations/

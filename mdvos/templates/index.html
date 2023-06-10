@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+       
+    <main>
+     
+
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item  " data-bs-interval="5000">
+          <img src="{% static "img/index/klatka.jpg" %}" class="d-block w-100" alt="Baner 1">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>First slide label</h5>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
+        </div>
+        <div class="carousel-item active" data-bs-interval="5000">
+          <img src="{% static "img/index/klatka_1.jpg" %}" class="d-block w-100" alt="Baner 2">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>second slide label</h5>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
+        </div>
+        <div class="carousel-item " data-bs-interval="5000">
+          <img src="{% static "img/index/klatka_2.jpg" %}" class="d-block w-100" alt="Baner 3">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>3 slide label</h5>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <div class="d-block w-100 my-3">
+      <div class="row w-100">
+        <div class="col-sm-1 col-xl-1">
+        </div>
+        <div class="col-sm-10 mx-auto col-xl-10">
+          <div class="row w-100 ">
+            <div class="col-sm-12 col-md-8 col-xl-8 pt-5">
+                <div class="container d-flex">
+                  <div class="mx-auto">
+                <div class="">
+                  <p class="fs-3">Jakiś Telefon</p>
+                </div>
+                <div class="">
+                  <p class="card-text">O budżetowe telefony niezwykle trudno, szczególnie w czasach szalejącej inflacji. Jedyną firmą, która mogłaby sobie z tym poradzić jest uwielbiane przez Polaków Xiaomi. Konkretniej mowa tutaj o marce Redmi i ich najnowszym modelu A1.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="col-sm-12 col-md-4 col-xl-4 pt-3">
+              <div class="card border-0 mx-auto mt-" style="width: 18rem;">
+                <img src="{% static "img/index/Redmi_A1.jpg" %}" class="card-img-top" alt="..."/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1 col-xl-1">
+        </div>
+      </div>
+    </div>
+  </main>
+
+{% endblock %}
+

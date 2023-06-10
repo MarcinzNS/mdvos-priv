@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main>
+    <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-5 col-md-7 py-5">
+            <h2>Dodaj nowe urządzenie:</h2>
+            <form class="border bg-login border-2 rounded-3 p-3" action="{% url 'add_device' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+      
+                <div class="col-sm-12 mx-auto mb-3">
+                  <input name="{{main_form.brand.name}}" class="form-control" placeholder="{{main_form.brand.label}}" type="text" autocomplete="off"/>
+                </div>
+      
+                <div class="col-sm-12 mx-auto mb-3">
+                  <input name="{{main_form.model.name}}" class="form-control" placeholder="{{main_form.model.label}}" type="text" autocomplete="off"/>
+                </div>
+      
+                <div class="col-sm-12 mx-auto mb-3">
+                  <label for="category_input" class="mx-1 user-select-none">Rodzaj urządzenia</label>
+                    <select name="{{ main_form.device_type.name }}" class="form-select" aria-label="{{ main_form.device_type.label }}" id="category_input">
+                        {% for value, label in main_form.device_type.field.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+      
+                <div class="col-sm-12 mx-auto mb-3">
+                  <label for="date_input"class="mx-1 user-select-none">Data premiery</label>
+                  <input name="{{main_form.release_date.name}}" class="form-control" placeholder="{{main_form.release_date.label}}" type="date" id="date_input"/>
+                </div>
+      
+                <div class="col-sm-12 mx-auto mb-3">
+                  <label for="image_input" class="mx-1 user-select-none">Zdjęcie urządzenia (.png)</label>
+                  <input name="{{main_form.image.name}}" class="form-control" placeholder="{{main_form.image.label}}" type="file" id="image_input"/>
+                </div>
+
+
+                  <div class="col-sm-12 mx-auto mb-3 input-group">
+                    <span class="input-group-text bi bi-cpu" id="basic-addon1"></span>
+                    <input name="{{specs_form.cpu.name}}" class="form-control" placeholder="{{specs_form.cpu.label}}" type="text" autocomplete="off"/>
+                  </div>
+        
+                  <div class="col-sm-12 mx-auto mb-3 input-group">
+                    <span class="input-group-text bi bi-memory" id="basic-addon1"></span>
+                    <input name="{{specs_form.ram.name}}" class="form-control" placeholder="{{specs_form.ram.label}}" type="text" autocomplete="off"/>
+                  </div>
+
+                  <div class="col-sm-12 mx-auto mb-3 input-group">
+                    <span class="input-group-text bi bi-arrows-angle-expand" id="basic-addon1"></span>
+                    <input name="{{specs_form.screen_size.name}}" class="form-control" placeholder="{{specs_form.screen_size.label}}" type="text" autocomplete="off"/>
+                  </div>
+
+                  <div class="col-sm-12 mx-auto mb-3 input-group">
+                    <span class="input-group-text bi bi-battery-full" id="basic-addon1"></span>
+                    <input name="{{specs_form.battery.name}}" class="form-control" placeholder="{{specs_form.battery.label}}" type="text" autocomplete="off"/>
+                  </div>
+
+                  <div class="col-sm-12 mx-auto mb-3 input-group">
+                    <span class="input-group-text bi bi-hdd" id="basic-addon1"></span>
+                    <input name="{{specs_form.disk_size.name}}" class="form-control" placeholder="{{specs_form.disk_size.label}}" type="text" autocomplete="off"/>
+                  </div>
+
+              <button type="submit" class="btn btn-primary col-4 offset-sm-4">Dodaj</button>
+            </form>
+            <br/>
+
+            {% if main_form.errors %}
+              {% for field in main_form.errors.values %}
+                {% for error in field %}
+                  <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+                    {{error}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+</main>
+
+
+{% endblock %}
+{% block footer %}{% endblock %}

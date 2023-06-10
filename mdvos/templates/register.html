@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Rejestracja{% endblock %}
+
+
+{% block content %}
+<main>
+  
+    <div class="container ">
+      <div class="row justify-content-center">
+        <div class="col-xl-4 col-md-8 py-5">
+            <h2>Rejestracja:</h2>
+            <form class="border bg-login border-2 rounded-3 p-3" action="{% url 'registration' %}" method="post">
+              {% csrf_token %}
+
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.first_name.name}}" class="form-control" placeholder="{{form.first_name.label}}" type="text"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.last_name.name}}" class="form-control" placeholder="{{form.last_name.label}}" type="text" autocomplete="new-account"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.username.name}}" class="form-control" placeholder="{{form.username.label}}" type="text" autocomplete="new-account"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.email.name}}" class="form-control" placeholder="{{form.email.label}}" type="email" autocomplete="new-account"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.password1.name}}" class="form-control" placeholder="{{form.password1.label}}" type="password" autocomplete="new-account"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                  <input name="{{form.password2.name}}" class="form-control" placeholder="{{form.password2.label}}" type="password" autocomplete="new-account"/>
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary col-6 offset-sm-3">Zarejestruj się</button>
+            </form>
+            <br>
+
+            {% if form.errors %}
+              {% for field in form.errors.values %}
+                {% for error in field %}
+                  <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+                    {{error}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
+                  <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            <div class="float-end mt-3">
+              <a href="{% url 'login' %}" class= "link-dark  link-offset-2 ">Wróć do logowania</a>
+            </div>
+          
+        </div>
+      </div>
+
+      
+    </div>
+  
+  </main>
+{% endblock %}
+{% block footer %}{% endblock %}

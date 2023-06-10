@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %} Profil użytkownika{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<main>
+    <section class="w-auto vh-100">
+        <div class="container py-4">
+        
+            <div class="row d-flex justify-content-center align-items-center h-100 ">
+            <div class="col col-lg-10 mb-4 mb-lg-0">
+                <div class="card mb-3 border-0 py-1">
+                    <div class="row g-0">
+                    {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert alert-danger" role="alert">
+                            {{message}}
+                          </div>
+                        {% endfor %}
+                    {% endif %}   
+                        <div class="card-body p-4 ">
+                            <h3>Witaj, {{request.user.username}}!</h3>
+                            <hr class="mt-0 mb-4">
+                            <div class="row pt-1">
+                            <div class="col-8 mb-3 px-5">
+                                <h6>Imie</h6>
+                                <p class="text-muted">{{request.user.first_name}}</p>  
+                                <h6>Nazwisko</h6>
+                                <p class="text-muted">{{request.user.last_name}}</p>  
+                                <h6>Email</h6>
+                                <p class="text-muted">{{request.user.email}}</p> 
+
+                                <hr class="mt-0 mb-4">
+                                <h6>Twoje urządzenia</h6>
+                                                            
+                            </div>
+                            <div class="col-4 mb-3">
+                            <div class="d-flex flex-row mb-3">
+                                                <!-- 
+                                                <a href ="{% url 'favourites_list' %}" class = "no">
+                                                    <div class="card border-0 p-2" style="width: 18rem;">
+                                                        <img src="{% static "img/profile/liked.png" %}" class="img-thumbnail " alt="...">
+                                                        <div class="card-body">
+                                                            <p>Ulubione</p>
+                                                        </div>
+                                                    </div>
+                                                </a>-->
+                                                <a href ="{% url 'followed_list' %}" class = "no text-center" style="text-decoration:none;color:#000000">
+                                                    <div class="card border-0 p-2" style="width: 18rem;">
+                                                        <img src="{% static "img/profile/sledzone.png" %}" class="img-thumbnail " alt="...">
+                                                        <div class="card-body ">
+                                                            <h6><i class='bi bi-heart'></i>  Ulubione urządzenia</h6>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                            </div>
+                           
+                            </div>
+                            <h6></h6>
+                            <hr class="mt-0 mb-4">
+                            <div class="row pt-1">
+                                <div class="col-6 mb-3">
+                                    <h6></h6>
+                                    <p class="text-muted"></p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <h6></h6>
+                                    <p class="text-muted"></p>
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </div>
+                            </div>
+                            <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <button  class = "btn " data-bs-toggle="modal" data-bs-target = "#edit_modal"><i class='bi bi-pencil'></i> Edytuj dane</button>  
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <button  class = "btn " data-bs-toggle="modal" data-bs-target = "#password_modal"><i class='bi bi-pencil'></i> Zmień hasło</button>
+                                </li>
+                            </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+            </div>
+        </div>
+    </section>
+</main>
+<div class="modal fade" id="edit_modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edytuj dane</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="modal-body " method="post">
+        {% csrf_token %}
+        <input name="{{form.first_name.name}}" class="form-control my-2" placeholder="{{form.first_name.label}}" type="text"/>
+        <input name="{{form.last_name.name}}" class="form-control my-2" placeholder="{{form.last_name.label}}" type="text" autocomplete="edited-account"/>
+        <input name="{{form.username.name}}" class="form-control my-2" placeholder="{{form.username.label}}" type="text" autocomplete="edited-account"/>
+        <input name="{{form.email.name}}" class="form-control my-2" placeholder="{{form.email.label}}" type="email" autocomplete="edited-account"/>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <button type="submit" class="btn btn-primary" name="save_edit">Zapisz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="password_modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Zmień hasło</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="modal-body " method="post">
+        {% csrf_token %}
+        <input name="{{form.old_password.name}}" class="form-control my-2" placeholder="{{form.old_password.label}}" type="password"/>
+        <input name="{{form.password1.name}}" class="form-control my-2" placeholder="{{form.password1.label}}" type="password" autocomplete="edited-account"/>
+        <input name="{{form.password2.name}}" class="form-control my-2" placeholder="{{form.password2.label}}" type="password" autocomplete="edited-account"/>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+          <button type="submit" class="btn btn-primary" name="save_password_change">Zapisz</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}

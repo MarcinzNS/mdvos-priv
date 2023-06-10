@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %} Logowanie{% endblock %}
+
+
+{% block content %}
+<main>
+    
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-xl-4 col-md-8 py-5">
+              <h2>Logowanie:</h2>
+                <form action="{% url 'login' %}" method="post" class="bg-login border border-2 rounded-3 p-3 ">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ next_page }}">
+                    <div class="row mb-3">
+                      <div class="col-sm-12">
+                        <input type="email" class="form-control" placeholder="Email" name="email" id="inputEmail3" autocomplete="email">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">  
+                      <div class="col-sm-12">
+                        <input type="password" class="form-control" placeholder="Hasło" name="password" id="inputPassword3">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <div class="col-sm-10 ">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="gridCheck1">
+                          <label class="form-check-label" for="gridCheck1">
+                            Zapamiętaj mnie
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary col-6 offset-sm-3">Zaloguj się</button>
+                </form>
+                <br>
+
+                {% if messages %}
+                    {% for message in messages %}
+                      {% if message.tags == 'error' %}
+                        <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                      {% endif %}
+                      
+                      {% if message.tags == 'success' %}
+                        <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                {% endif %}
+              
+              <form >
+                <div class="mt-1">
+                  <div class="mt-2">
+                    <a href="#" class= "link-dark  link-offset-2 ">Nie pamiętasz hasła?</a>
+                  </div>
+                  <div class="mt-2">
+                    <a href="{% url 'registration' %}" class= "link-dark  link-offset-2 ">Zarejestruj się</a>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+    
+    
+</main>
+{% endblock %}
+{% block footer %}{% endblock %}

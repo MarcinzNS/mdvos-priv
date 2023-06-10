@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %} Profil użytkownika{% endblock %}
+
+{% block content %}
+wow ulubione
+{%for favourites_list in new %}
+<div>
+<a href="{% url 'one_device' id=favourites_list.devices_id.id_device %}">Czytaj więcej</a>
+</div>
+{% endfor %}
+{% endblock %}
+{% block footer %}{% endblock %}

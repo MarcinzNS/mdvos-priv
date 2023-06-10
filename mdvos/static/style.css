@@ -1,0 +1,42 @@
+.main_nav{
+	min-height: 60px;
+	background-color: rgb(24, 24, 24);
+  }
+footer{
+	background-color: rgb(24, 24, 24);
+  }
+  
+  .bg-wyszukaj{
+	background-color: #E0E0E0;
+	padding: 2px;
+  }
+  .bg-login{
+	background-color: rgba(74, 72, 71, 0.05);
+	color: rgb(70, 69, 69);
+  }
+  .bg-button-register{
+	background-color: #333D51;
+	color:#FFFFFF;
+  }
+  .bg-nav2{
+	background-color: #D3AC2B ;
+	color:#FFFFFF;
+	height: 100%
+  }
+  .bg-body.light {
+	background-color: #F4F3EA;
+  }
+  .bg-body.dark {
+	background-color: #333D51;
+  }
+  .btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: #333D51 !important;
+	border-color: #333D51 !important;
+}
+.btn-primary:hover
+{
+	background-color: #222C40 !important;
+	border-color:#222C40 !important;
+}
+
+    
